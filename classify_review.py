@@ -17,9 +17,8 @@ COLLECTION_NAME = "labeled_reviews"
 CHROMA_PATH = "./chroma_db"
 DATA_PATH = "data/puzzle_app_reviews.csv"
 
-# -------- BUILD VECTOR STORE (only runs once) --------
+# -------- BUILD VECTOR STORE --------
 def build_vector_store():
-    print("Initializing vector store...")
     embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
     vector_store = Chroma(
         collection_name=COLLECTION_NAME,
@@ -71,8 +70,8 @@ def classify_review(review_text, vector_store):
 
 # -------- CLI ENTRY POINT --------
 def main():
-    parser = argparse.ArgumentParser(description="Classify a puzzle app review.")
-    parser.add_argument("review", type=str, help="The app review text.")
+    parser = argparse.ArgumentParser(description="Assign a topic to an app review")
+    parser.add_argument("review", type=str, help="app review contents")
     args = parser.parse_args()
 
     if not OPENAI_API_KEY:
@@ -80,7 +79,7 @@ def main():
 
     vector_store = build_vector_store()
     topic = classify_review(args.review, vector_store)
-    print(f"Category: {topic}")
+    print(f"Topic: {topic}")
 
 
 if __name__ == "__main__":
